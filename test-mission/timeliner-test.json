@@ -1,0 +1,223 @@
+{
+	"version": "1.5.0",
+	"modified": "Thu Jan 10 2019 03:01:04 GMT+0900 (Korean Standard Time)",
+	"title": "Untitled",
+	"ui": {
+		"currentTime": 4,
+		"totalTime": 20,
+		"scrollTime": 0,
+		"timeScale": 60
+	},
+	"layers": [
+		{
+			"name": "x1",
+			"values": [
+				{
+					"time": 0,
+					"value": 0,
+					"_color": "#d2543a",
+					"tween": "linear"
+				},
+				{
+					"time": 2,
+					"value": -2.0000000000000004,
+					"_color": "#18015c",
+					"tween": "linear"
+				},
+				{
+					"time": 3,
+					"value": -0.9999999999999999,
+					"_color": "#7aa365",
+					"tween": "linear"
+				},
+				{
+					"time": 4,
+					"value": -0.7,
+					"_color": "#ee7c4d"
+				}
+			],
+			"_value": -0.7,
+			"_color": "#5ac0c5"
+		},
+		{
+			"name": "y1",
+			"values": [
+				{
+					"time": 0,
+					"value": 0,
+					"_color": "#cd4f56",
+					"tween": "linear"
+				},
+				{
+					"time": 1,
+					"value": 2.800000000000001,
+					"_color": "#c514c1",
+					"tween": "linear"
+				},
+				{
+					"time": 2,
+					"value": 0.9999999999999999,
+					"_color": "#3b5244",
+					"tween": "linear"
+				},
+				{
+					"time": 3,
+					"value": -1.0999999999999999,
+					"_color": "#9d1584",
+					"tween": "linear"
+				},
+				{
+					"time": 4,
+					"value": 0.8999999999999999,
+					"_color": "#5c1f0a"
+				}
+			],
+			"_value": 0.8999999999999999,
+			"_color": "#388fdc"
+		},
+		{
+			"name": "z1",
+			"values": [
+				{
+					"time": 0,
+					"value": 0,
+					"_color": "#6be5e4",
+					"tween": "linear"
+				},
+				{
+					"time": 1,
+					"value": 0.4,
+					"_color": "#8c69ec",
+					"tween": "linear"
+				},
+				{
+					"time": 2,
+					"value": -0.6,
+					"_color": "#a1b944",
+					"tween": "linear"
+				},
+				{
+					"time": 3,
+					"value": -0.9999999999999999,
+					"_color": "#7ac93e",
+					"tween": "linear"
+				},
+				{
+					"time": 4,
+					"value": 1.0999999999999999,
+					"_color": "#a2f7d7"
+				}
+			],
+			"_value": 1.0999999999999999,
+			"_color": "#bd9a01"
+		},
+		{
+			"name": "x2",
+			"values": [
+				{
+					"time": 0,
+					"value": 1,
+					"_color": "#9487dd",
+					"tween": "linear"
+				},
+				{
+					"time": 1,
+					"value": 1.5000000000000002,
+					"_color": "#e76076",
+					"tween": "linear"
+				},
+				{
+					"time": 2,
+					"value": 0.7989999999999999,
+					"_color": "#f867dd",
+					"tween": "linear"
+				},
+				{
+					"time": 3,
+					"value": 1.0999999999999999,
+					"_color": "#df80d",
+					"tween": "linear"
+				},
+				{
+					"time": 4,
+					"value": 0.7999999999999999,
+					"_color": "#33875"
+				}
+			],
+			"_value": 0.7999999999999999,
+			"_color": "#ba98af"
+		},
+		{
+			"name": "y2",
+			"values": [
+				{
+					"time": 0,
+					"value": 0,
+					"_color": "#972ac0",
+					"tween": "linear"
+				},
+				{
+					"time": 1,
+					"value": 0.7999999999999999,
+					"_color": "#5fac78",
+					"tween": "linear"
+				},
+				{
+					"time": 2,
+					"value": -0.7999999999999999,
+					"_color": "#f3f16",
+					"tween": "linear"
+				},
+				{
+					"time": 3,
+					"value": 0.7,
+					"_color": "#5f343d",
+					"tween": "linear"
+				},
+				{
+					"time": 4,
+					"value": 1.4000000000000001,
+					"_color": "#5ef2a1"
+				}
+			],
+			"_value": 1.4000000000000001,
+			"_color": "#3c917a"
+		},
+		{
+			"name": "z2",
+			"values": [
+				{
+					"time": 0,
+					"value": 1,
+					"_color": "#2b18ac",
+					"tween": "linear"
+				},
+				{
+					"time": 1,
+					"value": 0.30000000000000004,
+					"_color": "#5be225",
+					"tween": "linear"
+				},
+				{
+					"time": 2,
+					"value": 0.6,
+					"_color": "#7fbf12",
+					"tween": "linear"
+				},
+				{
+					"time": 3,
+					"value": 0.7999999999999999,
+					"_color": "#f8e5d2",
+					"tween": "linear"
+				},
+				{
+					"time": 4,
+					"value": -1.3,
+					"_color": "#b2ad57"
+				}
+			],
+			"_value": -1.3,
+			"_color": "#1c7c01"
+		}
+	]
+}
