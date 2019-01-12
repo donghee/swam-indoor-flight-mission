@@ -1,6 +1,6 @@
 require('three')
 require('three/OrbitControls')
-require('lib/timeliner')
+require('lib/timeliner/timeliner')
 
 var target = {
   x1: 0, y1: 0, z1: 0,

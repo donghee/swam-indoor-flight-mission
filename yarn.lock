@@ -720,6 +720,10 @@ dns-txt@^2.0.2:
   dependencies:
     buffer-indexof "^1.0.0"
 
+do.js@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/do.js/-/do.js-1.0.0.tgz#2aae97f2d1a67f4d50324bd6f6595f4396a99ede"
+
 domain-browser@^1.1.1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/domain-browser/-/domain-browser-1.2.0.tgz#3d31f50191a6749dd1375a7f522e823d42e54eda"

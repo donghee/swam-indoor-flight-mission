@@ -11,7 +11,7 @@ module.exports = {
 
   resolve: {
     alias: {
-      'lib': path.join(__dirname, 'lib'),
+      'lib/timeliner': path.join(__dirname, 'lib/timeliner/src'),
       'three/OrbitControls': path.join(__dirname, 'node_modules/three/examples/js/controls/OrbitControls.js')
     }
   },

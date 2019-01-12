@@ -1,0 +1,39 @@
+{
+  "name": "timeliner",
+  "version": "1.5.0",
+  "description": "simple js animation timeline library",
+  "main": "timeliner.js",
+  "scripts": {
+    "build": "browserify src/timeliner.js --full-paths=false -t package-json-versionify -o timeliner.js",
+    "mini": "browserify src/timeliner.js -g uglifyify -t package-json-versionify  --full-paths=false -o timeliner.min.js",
+    "watch": "watchify src/timeliner.js --full-paths=false -t package-json-versionify --debug -o timeliner.js -v",
+    "start": "npm run watch",
+    "lint": "eslint src/",
+    "test": "echo \"Error: no tests :(\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zz85/timeliner.git"
+  },
+  "keywords": [
+    "timeline",
+    "animation",
+    "keyframe",
+    "tween",
+    "ease",
+    "controls",
+    "gui"
+  ],
+  "author": "joshua koo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zz85/timeliner/issues"
+  },
+  "homepage": "https://github.com/zz85/timeliner",
+  "devDependencies": {
+    "do.js": "^1.0.0",
+    "browserify": "^16.2.3",
+    "package-json-versionify": "^1.0.2",
+    "uglifyify": "^2.6.0"
+  }
+}
