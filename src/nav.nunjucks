@@ -1,0 +1,12 @@
+      <header class="site-header">
+	<nav class="container">
+	  <div class="header">
+	    <a class="home" href="/" >
+	      <img alt="ETRI" style="height:30px;vertical-align:middle; " src="https://www.etri.re.kr/images/kor/sub5/ci_img01.png"> 
+	    </a>
+ 	    <h4 style="display:inline-block; margin-right: 50px"> INDOOR FLIGHT </h4>
+	    <a href="/editor">/Editor</a>
+	    <a href="/live">/Live</a>
+	  </div>
+	</nav>
+      </header>

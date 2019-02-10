@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  {% include "head.nunjucks" %}
+  <body>
+    <div class="site-wrapper">
+      {% include "nav.nunjucks" %}
+      <div class="site-content">
+	<div id="site-container">
+	</div>	  
+        <div id="timeline-container">
+	</div>
+      </div>
+      {% include "footer.nunjucks" %}
+      <script src="{{ js_path }}"></script>
+    </div>
+  </body>
+</html>

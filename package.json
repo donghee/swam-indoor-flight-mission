@@ -16,11 +16,17 @@
     "do.js": "^1.0.0",
     "exports-loader": "^0.6.4",
     "express": "^4.15.2",
+    "mqtt": "^2.18.8",
     "nunjucks": "^3.0.0",
+    "redis": "^2.8.0",
     "script-loader": "^0.7.0",
+    "socket.io": "^2.2.0",
     "three": "^0.100.0",
     "webpack": "^2.4.1",
     "webpack-dev-middleware": "^1.10.2",
     "webpack-dev-server": "^2.4.5"
+  },
+  "devDependencies": {
+    "js-beautify": "^1.8.9"
   }
 }
