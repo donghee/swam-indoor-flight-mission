@@ -19,6 +19,7 @@
     "mqtt": "^2.18.8",
     "nunjucks": "^3.0.0",
     "redis": "^2.8.0",
+    "rosnodejs": "^3.0.0",
     "script-loader": "^0.7.0",
     "socket.io": "^2.2.0",
     "three": "^0.100.0",

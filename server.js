@@ -31,7 +31,7 @@ app.get('/editor', (req, res) => {
 })
 
 app.get('/live', (req, res) => {
-  res.render('live', {})
+  res.render('roslibjs', {})
 })
 
 console.log('Starting server on localhost:' + PORT)

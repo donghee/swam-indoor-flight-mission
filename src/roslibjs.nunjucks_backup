@@ -1,0 +1,416 @@
+<html lang="en">
+  {% include "head.nunjucks" %}
+  <body>
+    <script src="https://threejs.org/build/three.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/shaders/FXAAShader.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/postprocessing/OutlinePass.js"></script>
+
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.5/dat.gui.min.js"></script>
+
+    <script type="text/javascript" src="http://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+    <script type="text/javascript" src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+    <script type="text/javascript" src="js/drone.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+
+    <div class="site-wrapper">
+      {% include "nav.nunjucks" %}
+      <div class="site-content">
+	<div id="site-container">
+	  <div id="gui-container"></div>
+
+      <div style="position: absolute; top: 75px; left: 30px; width:
+                  150px; z-index: 
+                  1; 100%; align-items: center; background-color:
+                  rgba(254, 152, 160, 0.2); padding: 15px; color: #888">
+        <p>
+          <h2> Vehicle 1 <span id="uav1-connected">?</span> </h2>
+          <p>
+            <span id="uav1-mode">?</span>
+            <span id="uav1-armed">?</span>
+            <span id="uav1-battery-voltage">?</span>
+            <span id="uav1-local-position">?</span>
+          </p>
+          <p>
+            <button id="uav1-arm">Arm</button>
+            <button id="uav1-disarm">Disarm</button>
+          </p>
+          
+          <p>
+            <button id="uav1-takeoff">Takeoff</button>
+            <button id="uav1-land">Land</button>
+          </p>
+
+        <p style="display: inline;">
+            <span> GOAL: ENU (x,y,z)</span>
+            <input id="uav1-goal-x" size=2></input>
+            <input id="uav1-goal-y" size=2></input>
+            <input id="uav1-goal-z" size=2></input>
+            <button id="uav1-set-position">Set</button>
+            <button id="uav1-play"><img width=10 src="/img/play.svg"/>
+            Play</button>
+            <button id="uav1-stop"><img width=10 src="/img/stop.svg"/>
+              Stop</button>
+        </p>
+
+          <hr></hr>
+
+          <p>
+            <h2> Vehicle 2 <span id="uav2-connected">?</span> </h2>
+            <p>
+              <span id="uav2-mode">?</span>
+              <span id="uav2-armed">?</span>
+              <span id="uav2-battery-voltage">?</span>
+              <span id="uav2-local-position">?</span >                             
+            </p>
+            <p>
+              <button id="uav2-arm">Arm</button>
+              <button id="uav2-disarm">Disarm</button>
+            </p>
+            
+            <p>
+              <button id="uav2-takeoff">Takeoff</button>
+              <button id="uav2-land">Land</button>
+            </p>
+
+        <p style="display: inline;">
+            <span> GOAL: ENU (x,y,z)</span>
+            <input id="uav2-goal-x" size=2></input>
+            <input id="uav2-goal-y" size=2></input>
+            <input id="uav2-goal-z" size=2></input>
+            <button id="uav2-set-position">Set</button>
+            <button id="uav2-play"><img width=10 src="/img/play.svg"/>
+            Play</button>
+            <button id="uav2-stop"><img width=10 src="/img/stop.svg"/>
+            Stop</button>
+        </p>
+
+        <p>
+
+            <hr></hr>
+            
+            <p>
+              <h2> Vehicle 3 <span id="uav3-connected">?</span> </h2>
+              <p>
+                <span id="uav3-mode">?</span>
+                <span id="uav3-armed">?</span>
+                <span id="uav3-battery-voltage">?</span>
+                <span id="uav3-local-position">?</span >               
+              </p>
+              <p>
+                <button id="uav3-arm">Arm</button>
+                <button id="uav3-disarm">Disarm</button>
+              </p>
+              
+              <p>
+                <button id="uav3-takeoff">Takeoff</button>
+                <button id="uav3-land">Land</button>
+              </p>
+
+        <p style="display: inline;">
+            <span> GOAL: ENU (x,y,z)</span>
+            <input id="uav3-goal-x" size=2></input>
+            <input id="uav3-goal-y" size=2></input>
+            <input id="uav3-goal-z" size=2></input>
+            <button id="uav3-set-position">Set</button>
+            <button id="uav3-play"><img width=10 src="/img/play.svg"/> Play</button>
+            <button id="uav3-stop"><img width=10 src="/img/stop.svg"/>
+            Stop</button>
+        </p>              
+
+              </p>
+
+      </div>
+
+	</div>	  
+    <div id="timeline-container">
+	</div>
+      </div>
+      {% include "footer.nunjucks" %}
+    </div>
+    <script>
+
+
+
+     // https://slides.com/mgmerino/nodejs-socketio-threejs
+     // http://davidscottlyons.com/threejs-intro/#slide-0
+     // http://davidscottlyons.com/sketches/2017/03tree/
+     // https://www.udacity.com/course/interactive-3d-graphics--cs291
+
+     var controller = new function() {
+	   this.id = 'drone #1'
+	   this.x = 0.0;
+	   this.y = 0.0;
+	   this.z = 0.0;
+	   this.positionUpdate = function() {
+	     // post
+	     // save
+	     console.log('upload');
+	   }
+     }
+
+     var scene = new THREE.Scene();
+     var camera = new THREE.PerspectiveCamera(10, window.innerWidth / window.innerHeight, 1, 100);
+     //var camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 1000 );
+
+     var renderer = new THREE.WebGLRenderer();
+     renderer.setSize(window.innerWidth, window.innerHeight);
+     renderer.setClearColor(0xEEEEEE);
+     var container = document.getElementById('site-container');
+     renderer.setSize( window.innerWidth, window.innerHeight-120 );
+     renderer.setClearColor(0xEEEEEE);
+     container.appendChild( renderer.domElement );
+     // document.body.appendChild( renderer.domElement );
+
+     // axis
+     var axes = new THREE.AxesHelper(10);
+     scene.add(axes);
+
+     // station
+     var geometry = new THREE.CylinderBufferGeometry(0.1, 0.1, 2, 32);
+     var material = new THREE.MeshBasicMaterial({color: 0xFE98A0});
+     var cube = new THREE.Mesh(geometry, material);
+     scene.add(cube);
+     cube.position.y = 1
+
+     var cube1 = new THREE.Mesh(geometry, material);
+     scene.add(cube1);
+     cube1.position.x = 10
+     cube1.position.y = 1
+     cube1.position.z = 0
+
+     var cube2 = new THREE.Mesh(geometry, material);
+     scene.add(cube2);
+     cube2.position.x = 10
+     cube2.position.y = 1
+     cube2.position.z = -6
+
+     var cube3 = new THREE.Mesh(geometry, material);
+     scene.add(cube3);
+     cube3.position.x = 0
+     cube3.position.y = 1
+     cube3.position.z = -6
+
+     
+     // grid
+     var size = 100;
+     var divisions = 100;
+
+     var gridHelper = new THREE.GridHelper( size, divisions, 0x0000ff, 0x808080 );
+     gridHelper.position.y = 0;
+     gridHelper.position.x = 0;
+
+     scene.add(gridHelper);
+
+     // Camera	
+     // camera.lookAt(new THREE.Vector3(2.5, 25, 35));
+     camera.position.x = 2.5;
+     camera.position.y = 25;
+     camera.position.z = 40;
+     camera.translateX(5);
+
+
+     // Lighting
+     var ambient = new THREE.AmbientLight(0x808080);
+     scene.add(ambient);
+
+     var spotLight = new THREE.SpotLight(0xffffff);
+     spotLight.position.set(10, 20, 20);
+     spotLight.shadow.camera.near = 10;
+     spotLight.shadow.camera.far = 40;
+     spotLight.castShadow = true;
+     scene.add(spotLight);
+
+     // controls
+     var controls;
+     controls = new THREE.OrbitControls( camera, renderer.domElement );
+     ////controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
+     controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+     controls.dampingFactor = 0.25;
+     controls.screenSpacePanning = false;
+     controls.minDistance = 10;
+     controls.maxDistance = 50;
+     controls.maxPolarAngle = Math.PI / 2;
+
+
+     // leaving trace lines
+     // geometry
+     var geometry = new THREE.BufferGeometry();
+     var MAX_POINTS = 1000;
+
+     var positions = new Float32Array(MAX_POINTS * 3);
+
+     geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+      // material
+     var material = new THREE.LineBasicMaterial({
+       color: 0xFE98A0,
+       linewidth: 3
+     });
+
+     // line
+     var count = 0;
+     var traces = new THREE.Line(geometry, material);
+
+     scene.add(traces);
+
+      var x, y, z;
+      
+    function updateTraces(id, _x, _y, _z) {
+
+	x += ( Math.random() - 0.5 ) * 2;
+	y += ( Math.random() - 0.5 ) * 2;
+	  z += ( Math.random() - 0.5 ) * 2;
+
+      positions[count * 3 + 0] = x;
+      positions[count * 3 + 1] = y;
+      positions[count * 3 + 2] = z;
+
+      count++;
+      count = ( count + 1 ) % MAX_POINTS;
+
+      traces.geometry.setDrawRange(0, count);
+
+      if ( count === 0 ) {
+        traces.material.color.setHSL( Math.random(), 1, 0.5 );
+        positions = traces.geometry.attributes.position.array;
+      }
+	  traces.geometry.attributes.position.needsUpdate = true; // required after the first render
+      
+     }
+
+     var composer, outlinePass, effectFXAA;
+     var selectedObjects = []
+     
+     //post processing for outline
+     composer = new THREE.EffectComposer(renderer);
+     
+     var renderPass = new THREE.RenderPass(scene, camera);
+     composer.addPass(renderPass);
+     
+     outlinePass = new THREE.OutlinePass(new THREE.Vector2(window.innerWidth,
+                                                           window.innerHeight),
+                                         scene, camera);
+     composer.addPass(outlinePass);
+
+     effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
+     effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight);
+     effectFXAA.renderToScreen = true;
+
+     composer.addPass(effectFXAA);
+
+     var animate = function() {
+	   requestAnimationFrame( animate );
+       composer.render();
+     }
+
+     // drones
+     var handleState = function(message) {
+       document.getElementById(this.id + '-connected').innerHTML = message.connected ? "ON" : "OFF";
+       document.getElementById(this.id + '-mode').innerHTML = message.mode
+       document.getElementById(this.id + '-armed').innerHTML = message.armed ? "ARMED" : "DISARM;"
+
+       if (message.armed)
+         selectedObjects.push(this.model);
+       else
+         selectedObjects = selectedObjects.filter(item => item !== this.model);
+
+       outlinePass.selectedObjects = selectedObjects;
+     }
+
+     var handleBattery = function(message) {
+       document.getElementById(this.id + '-battery-voltage').innerHTML =
+         (message.percentage * 100.0).toFixed(0) + '%'
+     }
+
+      var handleLocalPosition = function(message) {
+        var x = (message.pose.position.x);
+        var y = (-message.pose.position.y);
+        var z = (message.pose.position.z);
+        document.getElementById(this.id + '-local-position').innerHTML
+          = 'ENU: ' + x.toFixed(1) + ','+ -y.toFixed(1) + ',' + z.toFixed(1);
+        updateTraces(this.id, x*2,z*2,y*2);
+      }
+
+     /* var drone1 = new Drone('uav1', 'ws://192.168.88.243:9090');
+      * drone1.handleState = handleState;
+      * drone1.handleBattery = handleBattery;
+
+      * var drone2 = new Drone('uav2', 'ws://192.168.88.242:9090');
+      * drone2.handleState = handleState;
+      * drone2.handleBattery = handleBattery;
+
+      * var drone3 = new Drone('uav3', 'ws://192.168.88.241:9090');
+      * drone3.handleState = handleState;
+      * drone3.handleBattery = handleBattery;
+      */
+
+     var timeline_uav1 = localStorage.getItem(localStorage.key('uav1'));
+
+     // console.log(timeline_uav1);
+     x1_time_0 = JSON.parse(timeline_uav1).layers[0].values[0].value;
+     x1_value_0 =JSON.parse(timeline_uav1).layers[0].values[0].value;
+
+     var timeline_uav1_0 = {time: 0, x: x1_time_0, y:x1_value_0, z: 1}
+
+     var drone1 = new Drone('uav1', 'ws://localhost:9090', simulation=true);
+     drone1.handleState = handleState;
+     drone1.handleBattery = handleBattery;
+     drone1.handleLocalPosition = handleLocalPosition;
+
+     var drone2 = new Drone('uav2', 'ws://localhost:9090', simulation=true);
+     drone2.handleState = handleState;
+     drone2.handleBattery = handleBattery;
+     drone2.handleLocalPosition = handleLocalPosition;
+
+setTimeout(function() {
+     drone2.setPosition(2, 2, 1);
+}, 3000);
+      
+setTimeout(function() {
+     drone2.setPosition(2, 2, 0);
+}, 6000);
+      
+setTimeout(function() {
+      drone2.setPosition(2, 2, 1);
+}, 9000);
+
+setTimeout(function() {
+      drone2.setPosition(2, 2, 0);
+}, 12000);
+
+
+     var drone3 = new Drone('uav3', 'ws://localhost:9090', simulation=true);
+     drone3.handleState = handleState;
+     drone3.handleBattery = handleBattery;
+     drone3.handleLocalPosition = handleLocalPosition;
+
+
+setTimeout(function() {
+     drone3.setPosition(3, 2, 1);
+}, 3000);
+      
+setTimeout(function() {
+     drone3.setPosition(3, 2, 0);
+}, 6000);
+      
+setTimeout(function() {
+   drone3.setPosition(3, 2, 1);
+}, 9000);
+
+setTimeout(function() {
+    drone3.setPosition(3, 2, 0);
+}, 12000);
+
+      
+     animate();
+    </script>
+  </body>
+</html>

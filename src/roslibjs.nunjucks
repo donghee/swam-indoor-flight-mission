@@ -1,0 +1,529 @@
+<html lang="en">
+  {% include "head.nunjucks" %}
+  <body>
+    <script src="https://threejs.org/build/three.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/shaders/FXAAShader.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/postprocessing/OutlinePass.js"></script>
+
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.5/dat.gui.min.js"></script>
+
+    <script type="text/javascript" src="http://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+    <script type="text/javascript" src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+    <script type="text/javascript" src="js/drone.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+
+
+	<script type="x-shader/x-vertex" id="vertexShader">
+
+	 varying vec3 vWorldPosition;
+
+	 void main() {
+
+	   vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
+	   vWorldPosition = worldPosition.xyz;
+
+	   gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+	 }
+
+	</script>
+
+	<script type="x-shader/x-fragment" id="fragmentShader">
+
+	 uniform vec3 topColor;
+	 uniform vec3 bottomColor;
+	 uniform float offset;
+	 uniform float exponent;
+
+	 varying vec3 vWorldPosition;
+
+	 void main() {
+
+	   float h = normalize( vWorldPosition + offset ).y;
+	   gl_FragColor = vec4( mix( bottomColor, topColor, max( pow( max( h , 0.0), exponent ), 0.0 ) ), 1.0 );
+
+	 }
+
+	</script>
+    
+    <style>
+     button {
+       margin-top:2px;
+     }
+     .tab-panel > input,
+     .tab-panel section > div {
+       display: none;
+     }
+     /* Component Needs */
+     @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700);
+     @import url(https://fonts.googleapis.com/css?family=Raleway:100,400,700);
+     .tab-panel > input,
+     .tab-panel section > div {
+       display: none;
+     }
+
+     #tab1:checked ~ section .tab1,
+     #tab2:checked ~ section .tab2 {
+       display: block;
+     }
+
+     #tab1:checked ~ nav .tab1,
+     #tab2:checked ~ nav .tab2 {
+       color: red;
+     }
+
+     .tab-panel ul {
+       list-style: none;
+       margin: 0;
+       padding: 0;
+     }
+
+     .tab-panel ul li label {
+       float: left;
+       padding: 0px 10px;
+       border: 1px solid #ddd;
+       border-bottom: 0;
+       background: #eeeeee;
+       color: #444;
+       margin-bottom: 10px;
+     }
+     .tab-panel ul li label:hover {
+       background: #dddddd;
+     }
+     .tab-panel ul li label:active {
+       background: #ffffff;
+     }
+
+     #tab1:checked ~ nav .tab1 label,
+     #tab2:checked ~ nav .tab2 label {
+       background: white;
+       color: #111;
+       position: relative;
+     }
+     #tab1:checked ~ nav .tab1 label:after,
+     #tab2:checked ~ nav .tab2 label:after {
+       content: "";
+       display: block;
+       position: absolute;
+       height: 2px;
+       width: 100%;
+       background: #ffffff;
+       left: 0;
+       bottom: -1px;
+     }
+
+    </style>
+    <div class="site-wrapper">
+      {% include "nav.nunjucks" %}
+      <div class="site-content">
+	    <div id="site-container">
+	      <div id="gui-container"></div>
+
+          <div class="tab-panel" style="position: absolute; top: 75px; left: 30px; width:
+                      150px; z-index: 1; 100%; align-items: center; background-color:
+                      rgba(254, 152, 160, 0.2); padding: 15px; color:
+                      #888">
+
+            <input checked="checked" id="tab1" type="radio" name="pct" />
+            <input id="tab2" type="radio" name="pct" />
+
+            <nav>
+              <ul>
+                <li class="tab1">
+                  <label for="tab1">Manual</label>
+                </li>
+                <li class="tab2">
+                  <label for="tab2">Auto</label>
+                </li>
+              </ul>
+            </nav>
+            <section>
+              <div class="tab1">
+                <p>
+                  <h2> Vehicle 1 <span id="uav1-connected">?</span> </h2>
+                  <p>
+                    <span id="uav1-mode">?</span>
+                    <span id="uav1-armed">?</span>
+                    <span id="uav1-battery-voltage">?</span>
+                    <span id="uav1-local-position">?</span>
+                  </p>
+                  <p>
+                    <button id="uav1-arm">Arm</button>
+                    <button id="uav1-disarm">Disarm</button>
+                    <button id="uav1-takeoff">Takeoff</button>
+                    <button id="uav1-land">Land</button>
+                  </p>
+
+                  <p style="display: inline;">
+                    <span> GOAL: ENU (x,y,z)</span>
+                    <input id="uav1-goal-x" size=2></input>
+                    <input id="uav1-goal-y" size=2></input>
+                    <input id="uav1-goal-z" size=2></input>
+                    <button id="uav1-set-position">Set</button>
+                    <button id="uav1-play"><img width=10 src="/img/location-arrow-solid.svg"/>
+                      Here</button>
+                    <button id="uav1-stop"><img width=10 src="/img/arrow-to-bottom.svg"/>
+                      Land</button>
+                  </p>
+                </p>
+
+                <hr></hr>
+
+                <p>
+                  <h2> Vehicle 2 <span id="uav2-connected">?</span> </h2>
+                  <p>
+                    <span id="uav2-mode">?</span>
+                    <span id="uav2-armed">?</span>
+                    <span id="uav2-battery-voltage">?</span>
+                    <span id="uav2-local-position">?</span >                             
+                  </p>
+                  <p>
+                    <button id="uav2-arm">Arm</button>
+                    <button id="uav2-disarm">Disarm</button>
+                    <button id="uav2-takeoff">Takeoff</button>
+                    <button id="uav2-land">Land</button>
+                  </p>
+
+                  <p style="display: inline;">
+                    <span> GOAL: ENU (x,y,z)</span>
+                    <input id="uav2-goal-x" size=2></input>
+                    <input id="uav2-goal-y" size=2></input>
+                    <input id="uav2-goal-z" size=2></input>
+                    <button id="uav2-set-position">Set</button>
+                    <button id="uav2-play"><img width=10 src="/img/location-arrow-solid.svg"/>
+                      Here</button>
+                    <button id="uav2-stop"><img width=10 src="/img/arrow-to-bottom.svg"/>
+                      Land</button>
+                  </p>
+
+                </p>
+                <hr></hr>
+                <p>
+                  <h2> Vehicle 3 <span id="uav3-connected">?</span> </h2>
+                  <p>
+                    <span id="uav3-mode">?</span>
+                    <span id="uav3-armed">?</span>
+                    <span id="uav3-battery-voltage">?</span>
+                    <span id="uav3-local-position">?</span >
+                  </p>
+                  <p>
+                    <button id="uav3-arm">Arm</button>
+                    <button id="uav3-disarm">Disarm</button>
+                    <button id="uav3-takeoff">Takeoff</button>
+                    <button id="uav3-land">Land</button>
+                  </p>
+
+                  <p style="display: inline;">
+                    <span> GOAL: ENU (x,y,z)</span>
+                    <input id="uav3-goal-x" size=2></input>
+                    <input id="uav3-goal-y" size=2></input>
+                    <input id="uav3-goal-z" size=2></input>
+                    <button id="uav3-set-position">Set</button>
+                    <button id="uav3-play"><img width=10 src="/img/location-arrow-solid.svg"/> Here</button>
+                    <button id="uav3-stop"><img width=10 src="/img/arrow-to-bottom.svg"/>
+                      Land</button>
+                  </p>
+                </p>
+              </div>
+              <div class="tab2">
+                <h2> Timeline Play </h2>
+
+                <progress id="uav1-progress" style="margin-bottom: 8px; margin-left: -5px;" value="0" max="1"></progress>
+
+                <span> Vehicle 1</span>
+                <button id="uav1-timeline-ready">R</button>
+                <button id="uav1-timeline-play"><img width=10
+                                                     src="/img/play.svg"/>
+                  Go</button>
+                
+                <hr/>
+                <progress id="uav2-progress" style="margin-bottom: 8px; margin-left: -5px;" value="0" max="1"></progress>                      
+                <span> Vehicle 2</span>
+                <button id="uav2-timeline-ready">R</button>
+                <button id="uav2-timeline-play"><img width=10
+                                                     src="/img/play.svg"/>
+                  Go</button>
+                
+                <hr/>
+                <progress id="uav3-progress" style="margin-bottom: 8px; margin-left: -5px;" value="0" max="1"></progress>                                                
+                <span> Vehicle 3</span>
+                <button id="uav3-timeline-ready">R</button>
+                <button id="uav3-timeline-play"><img width=10
+                                                     src="/img/play.svg"/>
+                  Go</button>
+
+                <hr></hr>
+
+                <button id="every-uav-timeline-play"
+                        style="font-size:20px;">
+                  <img width=15
+                       src="/img/play.svg"/>                  
+                  <span>Everybody Go!</span>
+                </button>
+
+              </div>
+
+            </section>
+          </div>
+
+	    </div>
+        <div id="timeline-container">
+	    </div>
+      </div>
+      {% include "footer.nunjucks" %}
+    </div>
+    <script>
+
+
+
+     // https://slides.com/mgmerino/nodejs-socketio-threejs
+     // http://davidscottlyons.com/threejs-intro/#slide-0
+     // http://davidscottlyons.com/sketches/2017/03tree/
+     // https://www.udacity.com/course/interactive-3d-graphics--cs291
+
+     var controller = new function() {
+	   this.id = 'drone #1'
+	   this.x = 0.0;
+	   this.y = 0.0;
+	   this.z = 0.0;
+	   this.positionUpdate = function() {
+	     // post
+	     // save
+	     console.log('upload');
+	   }
+     }
+
+     var scene = new THREE.Scene();
+     var camera = new THREE.PerspectiveCamera(10, window.innerWidth / window.innerHeight, 1, 100);
+
+     // for grid space
+     // var renderer = new THREE.WebGLRenderer();
+
+     // for skydome
+	 var renderer = new THREE.WebGLRenderer( { antialias: true } );
+	 renderer.setPixelRatio( window.devicePixelRatio );
+	 renderer.setSize( window.innerWidth, window.innerHeight );
+	 renderer.gammaInput = true;
+	 renderer.gammaOutput = true;
+	 renderer.shadowMap.enabled = true;
+
+     var container = document.getElementById('site-container');
+     renderer.setSize( window.innerWidth, window.innerHeight-120 );
+     renderer.setClearColor(0xEEEEEE);
+     container.appendChild( renderer.domElement );
+     // document.body.appendChild( renderer.domElement );
+
+     // axis
+     var axes = new THREE.AxesHelper(10);
+     scene.add(axes);
+
+     // station
+     var geometry = new THREE.CylinderBufferGeometry(0.1, 0.1, 2, 32);
+     var material = new THREE.MeshBasicMaterial({color: 0xFE98A0});
+     var cube = new THREE.Mesh(geometry, material);
+     scene.add(cube);
+     cube.position.y = 1
+
+     var cube1 = new THREE.Mesh(geometry, material);
+     scene.add(cube1);
+     cube1.position.x = 10
+     cube1.position.y = 1
+     cube1.position.z = 0
+
+     var cube2 = new THREE.Mesh(geometry, material);
+     scene.add(cube2);
+     cube2.position.x = 10
+     cube2.position.y = 1
+     cube2.position.z = -6
+
+     var cube3 = new THREE.Mesh(geometry, material);
+     scene.add(cube3);
+     cube3.position.x = 0
+     cube3.position.y = 1
+     cube3.position.z = -6
+
+     
+     // grid
+     var size = 100;
+     var divisions = 100;
+
+     var gridHelper = new THREE.GridHelper( size, divisions, 0x0000ff, 0x808080 );
+     gridHelper.position.y = 0;
+     gridHelper.position.x = 0;
+
+     scene.add(gridHelper);
+
+     // Camera	
+     // camera.lookAt(new THREE.Vector3(2.5, 25, 35));
+     camera.position.x = 2.5;
+     camera.position.y = 25;
+     camera.position.z = 40;
+     camera.translateX(5);
+
+
+     // Lighting
+     var ambient = new THREE.AmbientLight(0x808080);
+     scene.add(ambient);
+
+     var spotLight = new THREE.SpotLight(0xffffff);
+     spotLight.position.set(10, 20, 20);
+     spotLight.shadow.camera.near = 10;
+     spotLight.shadow.camera.far = 40;
+     spotLight.castShadow = true;
+     scene.add(spotLight);
+
+     // controls
+     var controls;
+     controls = new THREE.OrbitControls( camera, renderer.domElement );
+     ////controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
+     controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+     controls.dampingFactor = 0.25;
+     controls.screenSpacePanning = false;
+     controls.minDistance = 10;
+     controls.maxDistance = 50;
+     controls.maxPolarAngle = Math.PI / 2;
+
+
+     // leaving trace lines
+     // geometry
+     var geometry = new THREE.BufferGeometry();
+     var MAX_POINTS = 1000;
+
+     var positions = new Float32Array(MAX_POINTS * 3);
+
+     geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+     // material
+     var material = new THREE.LineBasicMaterial({
+       color: 0xFE98A0,
+       linewidth: 3
+     });
+
+     // line
+     var count = 0;
+     var traces = new THREE.Line(geometry, material);
+
+     scene.add(traces);
+
+     var x, y, z;
+     
+     function updateTraces(id, _x, _y, _z) {
+
+	   x += ( Math.random() - 0.5 ) * 2;
+	   y += ( Math.random() - 0.5 ) * 2;
+	   z += ( Math.random() - 0.5 ) * 2;
+
+       positions[count * 3 + 0] = x;
+       positions[count * 3 + 1] = y;
+       positions[count * 3 + 2] = z;
+
+       count++;
+       count = ( count + 1 ) % MAX_POINTS;
+
+       traces.geometry.setDrawRange(0, count);
+
+       if ( count === 0 ) {
+         traces.material.color.setHSL( Math.random(), 1, 0.5 );
+         positions = traces.geometry.attributes.position.array;
+       }
+	   traces.geometry.attributes.position.needsUpdate = true; // required after the first render
+       
+     }
+
+     var composer, outlinePass, effectFXAA;
+     var selectedObjects = []
+     
+     //post processing for outline
+     composer = new THREE.EffectComposer(renderer);
+     
+     var renderPass = new THREE.RenderPass(scene, camera);
+     composer.addPass(renderPass);
+     
+     outlinePass = new THREE.OutlinePass(new THREE.Vector2(window.innerWidth,
+                                                           window.innerHeight),
+                                         scene, camera);
+     composer.addPass(outlinePass);
+
+     effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
+     effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight);
+     effectFXAA.renderToScreen = true;
+
+     composer.addPass(effectFXAA);
+
+     var animate = function() {
+	   requestAnimationFrame( animate );
+       composer.render();
+     }
+
+     // drones
+     var handleState = function(message) {
+       document.getElementById(this.id + '-connected').innerHTML = message.connected ? "ON" : "OFF";
+       document.getElementById(this.id + '-mode').innerHTML = message.mode
+       document.getElementById(this.id + '-armed').innerHTML = message.armed ? "ARMED" : "DISARM;"
+
+       if (message.armed)
+         selectedObjects.push(this.model);
+       else
+         selectedObjects = selectedObjects.filter(item => item !== this.model);
+
+       outlinePass.selectedObjects = selectedObjects;
+     }
+
+     var handleBattery = function(message) {
+       document.getElementById(this.id + '-battery-voltage').innerHTML =
+         (message.percentage * 100.0).toFixed(0) + '%'
+     }
+
+     var handleLocalPosition = function(message) {
+       var x = (message.pose.position.x);
+       var y = (-message.pose.position.y);
+       var z = (message.pose.position.z);
+       document.getElementById(this.id + '-local-position').innerHTML
+       = 'ENU: ' + x.toFixed(1) + ','+ -y.toFixed(1) + ',' + z.toFixed(1);
+       updateTraces(this.id, x*2,z*2,y*2);
+     }
+
+     /* var drone1 = new Drone('uav1', 'ws://localhost:9090', simulation=true); */
+     var drone1 = new Drone('uav1', 'ws://192.168.88.241:9090');
+     
+     /* var drone2 = new Drone('uav2', 'ws://localhost:9090', simulation=true); */
+     var drone2 = new Drone('uav2', 'ws://192.168.88.242:9090');
+     
+     /* var drone3 = new Drone('uav3', 'ws://localhost:9090', simulation=true); */
+     var drone3 = new Drone('uav3', 'ws://192.168.88.243:9090');
+     
+     drone1.handleState = handleState;
+     drone1.handleBattery = handleBattery;
+     drone1.handleLocalPosition = handleLocalPosition;
+     document.getElementById('uav1-timeline-play').addEventListener('click', drone1.timelinePlay.bind(drone1));
+     
+     drone2.handleState = handleState;
+     drone2.handleBattery = handleBattery;
+     drone2.handleLocalPosition = handleLocalPosition;
+     document.getElementById('uav2-timeline-play').addEventListener('click', drone2.timelinePlay.bind(drone2));
+     
+     drone3.handleState = handleState;
+     drone3.handleBattery = handleBattery;
+     drone3.handleLocalPosition = handleLocalPosition;
+     document.getElementById('uav3-timeline-play').addEventListener('click', drone3.timelinePlay.bind(drone3));
+
+     document.getElementById('every-uav-timeline-play').addEventListener('click',
+                                                                         function()
+                                                                         {
+                                                                           document.getElementById('uav1-timeline-play').click();
+                                                                           document.getElementById('uav2-timeline-play').click();
+                                                                           document.getElementById('uav3-timeline-play').click();                                                                                                                                                      
+                                                                         });
+     
+     animate();
+    </script>
+  </body>
+</html>

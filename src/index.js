@@ -4,13 +4,13 @@ require('three/GLTFLoader')
 require('lib/timeliner/timeliner')
 
 var target = {
-  x1: 0, y1: 0, z1: 0,
+  x: 0, y: 0, z: 0,
 };
 
 var timeliner = new Timeliner(target);
-timeliner.addLayer('x1');
-timeliner.addLayer('y1');
-timeliner.addLayer('z1');
+timeliner.addLayer('x');
+timeliner.addLayer('y');
+timeliner.addLayer('z');
 
 var scene = new THREE.Scene();
 var renderer = new THREE.WebGLRenderer();
@@ -151,7 +151,8 @@ function animate_original() {
   requestAnimationFrame( animate_original );
   render()
 
-  // sphere.position.set(target.x1, target.z1, target.y1)
-  duck.position.set(target.x1, target.z1, target.y1)
+  // sphere.position.set(target.x, target.z, target.y)
+if (duck)
+  duck.position.set(target.x*2, target.z*2, -target.y*2)
 }
 animate_original();
