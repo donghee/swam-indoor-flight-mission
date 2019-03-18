@@ -86,7 +86,6 @@ Drone.prototype._handleBatteryMessage = function(message) {
 
 Drone.prototype._handleLocalPositionMessage = function(message) {
   if (this.model){
-
     this.model.position.x  = message.pose.position.x * 2
     this.model.position.z  = -message.pose.position.y * 2
     this.model.position.y  = message.pose.position.z * 2
@@ -101,6 +100,12 @@ Drone.prototype._handleGlobalPositonMessage = function(message) {
   this.global_position_latitude = message.latitude
   this.global_position_longitude = message.longitude
   this.global_position_altitude = message.altitude
+}
+
+Drone.prototype._handleStatusTextMessage = function(message) {
+  if (typeof this.handleStatusText === 'function') {
+    this.handleStatusText(message);
+  }
 }
 
 Drone.prototype.subscribes = function() {
@@ -134,10 +139,18 @@ Drone.prototype.subscribes = function() {
     messageType : 'sensor_msgs/NavSatFix'
   });
 
+  // statustext
+  this.vehicle_statustext_listener = new ROSLIB.Topic({
+    ros : this.ros,
+    name : this.namespace +'/mavros/statustext/recv',
+    messageType : 'mavros_msgs/StatusText'
+  });
+
   this.vehicle_state_listener.subscribe(this._handleStateMessage.bind(this));
   this.vehicle_battery_listener.subscribe(this._handleBatteryMessage.bind(this));
   this.vehicle_local_pose_listener.subscribe(this._handleLocalPositionMessage.bind(this));
   this.vehicle_global_pose_listener.subscribe(this._handleGlobalPositonMessage.bind(this));
+  this.vehicle_statustext_listener.subscribe(this._handleStatusTextMessage.bind(this));
 }
 
 Drone.prototype.armEventHandle = function(service_client, event) {
@@ -334,7 +347,6 @@ Drone.prototype.services = function() {
     messageType: 'std_srvs/Trigger'
   });
 
-
   // arm button
   var vehicle_arm_button = document.getElementById(this.id + '-arm');
   vehicle_arm_button.addEventListener('click',
@@ -362,8 +374,6 @@ Drone.prototype.services = function() {
   vehicle_land_button.addEventListener('click',
                                        this.landEventHandle.bind(this,vehicle_land_client));
 
-
-
   // play button
   var vehicle_play_button = document.getElementById(this.id + '-play');
   vehicle_play_button.addEventListener('click',
@@ -374,11 +384,10 @@ Drone.prototype.services = function() {
   vehicle_stop_button.addEventListener('click',
                                       this.stopEventHandle.bind(this,vehicle_stop_client));
 
-    // timeline ready button
+  // timeline ready button
   var vehicle_ready_button = document.getElementById(this.id + '-timeline-ready');
   vehicle_ready_button.addEventListener('click',
                                        this.readyEventHandle.bind(this, vehicle_ready_client));
-
 }
 
 Drone.prototype.setGoalHandle = function(pub_topic, event) {
