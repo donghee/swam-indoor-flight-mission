@@ -236,7 +236,7 @@
                   </p>
 
                   <p>
-                    <span id="uav1-statustext">?</span>
+                    <span id="uav1-statustext"></span>
                   </p>
 
                 </div>
@@ -271,7 +271,7 @@
                   </p>
 
                   <p>
-                    <span id="uav2-statustext">?</span>
+                    <span id="uav2-statustext"></span>
                   </p>
 
                 </div>
@@ -305,7 +305,7 @@
                   </p>
 
                   <p>
-                    <span id="uav3-statustext">?</span>
+                    <span id="uav3-statustext"></span>
                   </p>
                 </div>
             <section>
@@ -572,13 +572,16 @@
 
      var handleStatusText = function(message) {
        console.log('STATUSTEXT: ' + message.severity + ' ' + message.text);
-       if (message.severity === 6)
+       if (message.severity === 6) {
          document.getElementById(this.id + '-statustext').innerHTML
            = "<span style='color: lightseagreen;'>"+message.text+"</span>"
-
-       if (message.severity === 2)
+       } else if (message.severity === 2) {
          document.getElementById(this.id + '-statustext').innerHTML
            = "<span style='color: orangered;'>"+message.text+"</span>"
+       } else {
+         document.getElementById(this.id + '-statustext').innerHTML
+           = "<span style='color: black;'>"+message.text+"</span>"
+       }
      }
 
 {% if simulation %}
