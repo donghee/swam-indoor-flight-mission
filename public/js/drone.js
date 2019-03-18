@@ -302,28 +302,28 @@ Drone.prototype.services = function() {
   var vehicle_arming_client = new ROSLIB.Service( {
     ros: this.ros,
     name: this.namespace +'/mavros/cmd/arming',
-    messageType: 'mavros_msg/CommandBool'
+    messageType: 'mavros_msgs/CommandBool'
   });
 
   // arming, disarm client
   var vehicle_disarm_client = new ROSLIB.Service( {
     ros: this.ros,
     name: this.namespace +'/mavros/cmd/arming',
-    messageType: 'mavros_msg/CommandBool'
+    messageType: 'mavros_msgs/CommandBool'
   });
 
   // takeoff client
   var vehicle_takeoff_client = new ROSLIB.Service( {
     ros: this.ros,
     name: this.namespace +'/mavros/cmd/takeoff',
-    messageType: 'mavros_msg/CommandTOL'
+    messageType: 'mavros_msgs/CommandTOL'
   });
 
   // land client
   var vehicle_land_client = new ROSLIB.Service( {
     ros: this.ros,
     name: this.namespace +'/mavros/cmd/land',
-    messageType: 'mavros_msg/CommandTOL'
+    messageType: 'mavros_msgs/CommandTOL'
   });
 
   // play client
