@@ -491,14 +491,15 @@
        updateTraces(this.id, x*2,z*2,y*2);
      }
 
-     /* var drone1 = new Drone('uav1', 'ws://localhost:9090', simulation=true); */
+{% if simulation %}
+     var drone1 = new Drone('uav1', 'ws://localhost:9090', simulation=true);
+     var drone2 = new Drone('uav2', 'ws://localhost:9090', simulation=true);
+     var drone3 = new Drone('uav3', 'ws://localhost:9090', simulation=true);
+{% else %}
      var drone1 = new Drone('uav1', 'ws://192.168.88.241:9090');
-     
-     /* var drone2 = new Drone('uav2', 'ws://localhost:9090', simulation=true); */
      var drone2 = new Drone('uav2', 'ws://192.168.88.242:9090');
-     
-     /* var drone3 = new Drone('uav3', 'ws://localhost:9090', simulation=true); */
      var drone3 = new Drone('uav3', 'ws://192.168.88.243:9090');
+{% endif %}
      
      drone1.handleState = handleState;
      drone1.handleBattery = handleBattery;

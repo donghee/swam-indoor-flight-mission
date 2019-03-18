@@ -30,8 +30,10 @@ app.get('/editor', (req, res) => {
   })
 })
 
+var simulation = process.env.SIMULATOR || false
+
 app.get('/live', (req, res) => {
-  res.render('roslibjs', {})
+  res.render('roslibjs', {simulation: simulation})
 })
 
 console.log('Starting server on localhost:' + PORT)
