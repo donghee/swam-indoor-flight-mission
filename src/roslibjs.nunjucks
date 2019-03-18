@@ -54,18 +54,15 @@
 	 }
 
 	</script>
-    
     <style>
      button {
        margin-top:2px;
      }
-     .tab-panel > input,
-     .tab-panel section > div {
-       display: none;
-     }
+
      /* Component Needs */
      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700);
      @import url(https://fonts.googleapis.com/css?family=Raleway:100,400,700);
+
      .tab-panel > input,
      .tab-panel section > div {
        display: none;
@@ -109,8 +106,50 @@
        color: #111;
        position: relative;
      }
+
      #tab1:checked ~ nav .tab1 label:after,
      #tab2:checked ~ nav .tab2 label:after {
+       content: "";
+       display: block;
+       position: absolute;
+       height: 2px;
+       width: 100%;
+       background: #ffffff;
+       left: 0;
+       bottom: -1px;
+     }
+
+
+
+     .tab1 > input,
+     .tab1 section > div {
+       display: none;
+     }
+
+     #vehicle1:checked ~ section .vehicle1,
+     #vehicle2:checked ~ section .vehicle2,
+     #vehicle3:checked ~ section .vehicle3 {
+       display: block;
+     }
+
+     #vehicle1:checked ~ nav .vehicle1,
+     #vehicle2:checked ~ nav .vehicle2,
+     #vehicle3:checked ~ nav .vehicle3 {
+       color: red;
+     }
+
+
+     #vehicle1:checked ~ nav .vehicle1 label,
+     #vehicle2:checked ~ nav .vehicle2 label,
+     #vehicle3:checked ~ nav .vehicle3 label {
+       background: white;
+       color: #111;
+       position: relative;
+     }
+
+     #vehicle1:checked ~ nav .vehicle1 label:after,
+     #vehicle2:checked ~ nav .vehicle2 label:after,
+     #vehicle3:checked ~ nav .vehicle3 label:after {
        content: "";
        display: block;
        position: absolute;
@@ -147,8 +186,29 @@
               </ul>
             </nav>
             <section>
-              <div class="tab1">
-                <p>
+            <div class="tab1">
+
+
+            <input checked="checked" id="vehicle1" type="radio" name="vhc" />
+            <input id="vehicle2" type="radio" name="vhc" />
+            <input id="vehicle3" type="radio" name="vhc" />
+
+            <nav>
+              <ul>
+                <li class="vehicle1">
+                  <label for="vehicle1">1</label>
+                </li>
+                <li class="vehicle2">
+                  <label for="vehicle2">2</label>
+                </li>
+                <li class="vehicle3">
+                  <label for="vehicle3">3</label>
+                </li>
+              </ul>
+            </nav>
+ 
+            <section>
+                <div class="vehicle1">
                   <h2> Vehicle 1 <span id="uav1-connected">?</span> </h2>
                   <p>
                     <span id="uav1-mode">?</span>
@@ -179,11 +239,11 @@
                     <span id="uav1-statustext">?</span>
                   </p>
 
-                </p>
+                </div>
+            </section>
 
-                <hr></hr>
-
-                <p>
+            <section>
+                <div class="vehicle2">
                   <h2> Vehicle 2 <span id="uav2-connected">?</span> </h2>
                   <p>
                     <span id="uav2-mode">?</span>
@@ -214,9 +274,11 @@
                     <span id="uav2-statustext">?</span>
                   </p>
 
-                </p>
-                <hr></hr>
-                <p>
+                </div>
+            </section>
+
+            <section>
+                <div class="vehicle3">
                   <h2> Vehicle 3 <span id="uav3-connected">?</span> </h2>
                   <p>
                     <span id="uav3-mode">?</span>
@@ -245,8 +307,11 @@
                   <p>
                     <span id="uav3-statustext">?</span>
                   </p>
-                </p>
-              </div>
+                </div>
+            <section>
+
+            </div>
+              
               <div class="tab2">
                 <h2> Timeline Play </h2>
 
