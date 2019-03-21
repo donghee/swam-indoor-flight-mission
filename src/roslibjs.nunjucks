@@ -584,11 +584,13 @@
        }
      }
 
-{% if simulation %}
+{% if simulation == 'true' %}
+     console.log('Simulation mode');
      var drone1 = new Drone('uav1', 'ws://localhost:9090', simulation=true);
      var drone2 = new Drone('uav2', 'ws://localhost:9090', simulation=true);
      var drone3 = new Drone('uav3', 'ws://localhost:9090', simulation=true);
 {% else %}
+     console.log('Real mode')
      var drone1 = new Drone('uav1', 'ws://192.168.88.241:9090');
      var drone2 = new Drone('uav2', 'ws://192.168.88.242:9090');
      var drone3 = new Drone('uav3', 'ws://192.168.88.243:9090');
