@@ -15,7 +15,7 @@
     "consolidate": "^0.14.5",
     "do.js": "^1.0.0",
     "exports-loader": "^0.6.4",
-    "express": "^4.15.2",
+    "express": "^4.17.3",
     "mqtt": "^2.18.8",
     "nunjucks": "^3.0.0",
     "redis": "^2.8.0",
